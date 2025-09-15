@@ -1,1 +1,3 @@
-spring.application.name=Innowise-Intership-User-Service
+spring:
+  application:
+    name: Innowise-Intership-User-Service
