@@ -10,10 +10,10 @@ public record CardUpdateDto(
         @Pattern(regexp = "\\d{16}", message = "Card number must be 16 digits")
         String number,
 
-        @Size(max = 100)
+        @Size(max = 100, message = "Card holder name must not exceed 100 characters")
         String holder,
 
-        @Future
+        @Future(message = "Expiration date must be in the future")
         LocalDate expirationDate
 ) {
 }

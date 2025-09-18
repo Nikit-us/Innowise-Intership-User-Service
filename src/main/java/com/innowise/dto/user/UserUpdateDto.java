@@ -7,16 +7,16 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record UserUpdateDto(
-        @Size(max = 100)
+        @Size(max = 100, message = "Name must not exceed 100 characters")
         String name,
 
-        @Size(max = 100)
+        @Size(max = 100, message = "Surname must not exceed 100 characters")
         String surname,
 
-        @Past
+        @Past(message = "Birth date must be in the past")
         LocalDate birthDate,
 
-        @Email
+        @Email(message = "Email must be valid")
         String email
 ) {
 }
