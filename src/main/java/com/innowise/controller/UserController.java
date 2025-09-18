@@ -3,6 +3,7 @@ package com.innowise.controller;
 import com.innowise.dto.user.UserCreateDto;
 import com.innowise.dto.user.UserResponseDto;
 import com.innowise.dto.user.UserUpdateDto;
+import com.innowise.dto.user.UserWithCardsDto;
 import com.innowise.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserWithCardsDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
