@@ -3,13 +3,14 @@ package com.innowise.service;
 import com.innowise.dto.user.UserCreateDto;
 import com.innowise.dto.user.UserResponseDto;
 import com.innowise.dto.user.UserUpdateDto;
+import com.innowise.dto.user.UserWithCardsDto;
 
 import java.util.List;
 
 public interface UserService {
     UserResponseDto createUser(UserCreateDto userCreateDto);
 
-    UserResponseDto getUserById(Long id);
+    UserWithCardsDto getUserById(Long id);
     UserResponseDto getUserByEmail(String email);
     List<UserResponseDto> getUsersByIds(List<Long> ids);
 

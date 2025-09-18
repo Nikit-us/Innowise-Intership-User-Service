@@ -5,7 +5,7 @@ import com.innowise.dto.card.CardResponseDto;
 import java.time.LocalDate;
 import java.util.List;
 
-public record UserWithCards(
+public record UserWithCardsDto(
         Long id,
         String name,
         String surname,
