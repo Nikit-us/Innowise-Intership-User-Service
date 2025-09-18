@@ -7,13 +7,13 @@ import com.innowise.dto.user.UserUpdateDto;
 import java.util.List;
 
 public interface UserService {
-    void createUser(UserCreateDto userCreateDto);
+    UserResponseDto createUser(UserCreateDto userCreateDto);
 
     UserResponseDto getUserById(Long id);
     UserResponseDto getUserByEmail(String email);
-    List<UserResponseDto> getUsersById(List<Long> ids);
+    List<UserResponseDto> getUsersByIds(List<Long> ids);
 
-    void updateUser(Long id, UserUpdateDto userUpdateDto);
+    UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto);
 
     void deleteUser(Long id);
 }
