@@ -3,6 +3,7 @@ package com.innowise.service.impl;
 import com.innowise.dto.user.UserCreateDto;
 import com.innowise.dto.user.UserResponseDto;
 import com.innowise.dto.user.UserUpdateDto;
+import com.innowise.dto.user.UserWithCardsDto;
 import com.innowise.exception.ResourceNotFoundException;
 import com.innowise.mapper.UserMapper;
 import com.innowise.model.User;
@@ -27,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserById(Long id) {
-        return userMapper.toUserResponseDto(findUserById(id));
+    public UserWithCardsDto getUserById(Long id) {
+        return userMapper.toUserWithCards(findUserById(id));
     }
 
     @Override
