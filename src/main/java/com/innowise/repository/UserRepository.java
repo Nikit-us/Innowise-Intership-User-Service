@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(@Param("userEmail") String email);
 
     @Modifying
-    @Query(value = "UPDATE users SET name = COALESCE(:name, name), surname = COALESCE(:surname, surname), email = COALESCE(:email, email) WHERE id = :id", nativeQuery = true)
-    int updateUser(@Param("id") Long id, @Param("name") String name, @Param("surname") String surname, @Param("email") String email);
+    @Query(value = "UPDATE users SET name = COALESCE(:name, name), surname = COALESCE(:surname, surname), birth_date = COALESCE(:birthDate, birth_date) ,email = COALESCE(:email, email) WHERE id = :id", nativeQuery = true)
+    int updateUser(@Param("id") Long id, @Param("name") String name, @Param("surname") String surname, @Param("birthDate") LocalDate birthDate, @Param("email") String email);
 }
