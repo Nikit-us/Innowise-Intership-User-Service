@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getUsersByIds(List<Long> ids) {
-        List<User> users = userRepository.findAllByIdIn(ids);
+        List<User> users = userRepository.findAllById(ids);
         return userMapper.toUserResponseDto(users);
     }
 
