@@ -33,15 +33,24 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardResponseDto> getCardsByIds(List<Long> ids) {
-        List<Card> cards = cardRepository.findAllByIds(ids);
+        List<Card> cards = cardRepository.findAllByIdIn(ids);
         return cardMapper.toCardResponseDto(cards);
     }
 
     @Override
     @Transactional
     public CardResponseDto updateCard(Long id, CardUpdateDto cardUpdateDto) {
-        cardRepository.updateCard(id, cardUpdateDto.number(), cardUpdateDto.holder(), cardUpdateDto.expirationDate());
-        return cardMapper.toCardResponseDto(findCardById(id));
+        Card card = findCardById(id);
+        if(cardUpdateDto.holder() != null) {
+            card.setHolder(cardUpdateDto.holder());
+        }
+        if (cardUpdateDto.expirationDate() != null) {
+            card.setExpirationDate(cardUpdateDto.expirationDate());
+        }
+        if (cardUpdateDto.number() != null) {
+            card.setNumber(cardUpdateDto.number());
+        }
+        return cardMapper.toCardResponseDto(cardRepository.save(card));
     }
 
     @Override
