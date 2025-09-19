@@ -33,7 +33,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardResponseDto> getCardsByIds(List<Long> ids) {
-        List<Card> cards = cardRepository.findAllByIdIn(ids);
+        List<Card> cards = cardRepository.findAllById(ids);
         return cardMapper.toCardResponseDto(cards);
     }
 
