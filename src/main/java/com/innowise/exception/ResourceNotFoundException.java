@@ -1,7 +1,6 @@
 package com.innowise.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
-        super(message);
-    }
-}
+import lombok.experimental.StandardException;
+
+@StandardException
+public class ResourceNotFoundException extends RuntimeException {}
