@@ -1,7 +1,6 @@
 package com.innowise.exception;
 
-public class InvalidRequestException extends RuntimeException {
-    public InvalidRequestException(String message) {
-        super(message);
-    }
-}
+import lombok.experimental.StandardException;
+
+@StandardException
+public class InvalidRequestException extends RuntimeException {}

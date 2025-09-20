@@ -1,7 +1,6 @@
 package com.innowise.exception;
 
-public class ResourceAlreadyExistsException extends RuntimeException {
-    public ResourceAlreadyExistsException(String message) {
-        super(message);
-    }
-}
+import lombok.experimental.StandardException;
+
+@StandardException
+public class ResourceAlreadyExistsException extends RuntimeException {}
