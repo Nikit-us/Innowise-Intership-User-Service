@@ -16,3 +16,13 @@ spring:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: ${CACHE_HOST}
+      port: ${CACHE_PORT}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 18000

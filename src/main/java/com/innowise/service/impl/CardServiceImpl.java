@@ -10,6 +10,9 @@ import com.innowise.repository.CardRepository;
 import com.innowise.service.CardService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Cacheable(value = "cards", key = "#id")
     public CardResponseDto getCardById(Long id) {
         return cardMapper.toCardResponseDto(findCardById(id));
     }
@@ -39,6 +43,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
+    @CachePut(value = "cards", key = "#id")
     public CardResponseDto updateCard(Long id, CardUpdateDto cardUpdateDto) {
         Card card = findCardById(id);
         if(cardUpdateDto.holder() != null) {
@@ -55,6 +60,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cards", key = "#id")
     public void deleteCardById(Long id) {
         cardRepository.deleteById(id);
     }
