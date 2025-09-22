@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        deleteUserCache(id);
+        deleteUserCache(id, findUserById(id).getEmail());
         userRepository.deleteById(id);
     }
 
@@ -109,13 +109,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void deleteUserCache(Long id) {
+    private void deleteUserCache(Long id, String userEmail) {
         Cache cache = cacheManager.getCache("usersWithCards");
         if(cache != null) {
             cache.evict(id);
         }
-
-        String userEmail = findUserById(id).getEmail();
 
         cache = cacheManager.getCache("usersInfo");
         if(cache != null) {
