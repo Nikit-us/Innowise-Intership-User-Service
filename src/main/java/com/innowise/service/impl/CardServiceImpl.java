@@ -7,6 +7,7 @@ import com.innowise.exception.ResourceNotFoundException;
 import com.innowise.mapper.CardMapper;
 import com.innowise.model.Card;
 import com.innowise.repository.CardRepository;
+import com.innowise.repository.UserRepository;
 import com.innowise.service.CardService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
+    private final UserRepository userRepository;
     private final CardMapper cardMapper;
 
     @Override
     @Transactional
     public CardResponseDto createCard(CardCreateDto cardCreateDto) {
-        return cardMapper.toCardResponseDto(cardRepository.save(cardMapper.toCard(cardCreateDto)));
+        Card card = cardMapper.toCard(cardCreateDto);
+        card.setUser(userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new ResourceNotFoundException("User by id: " + cardCreateDto.userId() + " not found")));
+        return cardMapper.toCardResponseDto(cardRepository.save(card));
     }
 
     @Override
