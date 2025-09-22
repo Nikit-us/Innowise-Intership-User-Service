@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         User user = findUserById(id);
+        String oldEmail = user.getEmail();
 
         if (userUpdateDto.name() != null) {
             user.setName(userUpdateDto.name());
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepository.save(user);
 
-        updateUsersCache(updatedUser, user.getEmail());
+        updateUsersCache(updatedUser, oldEmail);
 
         return userMapper.toUserResponseDto(userRepository.save(user));
     }
