@@ -6,11 +6,14 @@ import com.innowise.dto.card.CardUpdateDto;
 import com.innowise.exception.ResourceNotFoundException;
 import com.innowise.mapper.CardMapper;
 import com.innowise.model.Card;
+import com.innowise.model.User;
 import com.innowise.repository.CardRepository;
 import com.innowise.repository.UserRepository;
 import com.innowise.service.CardService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,12 +27,15 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final CardMapper cardMapper;
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional
     public CardResponseDto createCard(CardCreateDto cardCreateDto) {
         Card card = cardMapper.toCard(cardCreateDto);
-        card.setUser(userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new ResourceNotFoundException("User by id: " + cardCreateDto.userId() + " not found")));
+        User user = userRepository.findById(cardCreateDto.userId()).orElseThrow(() -> new ResourceNotFoundException("User by id: " + cardCreateDto.userId() + " not found"));
+        card.setUser(user);
+        updateUserWithCardsCache(user.getId());
         return cardMapper.toCardResponseDto(cardRepository.save(card));
     }
 
@@ -71,5 +77,12 @@ public class CardServiceImpl implements CardService {
 
     private Card findCardById(Long id) {
         return cardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card by id " + id + " not found"));
+    }
+
+    private void updateUserWithCardsCache(Long userId) {
+        Cache cache = cacheManager.getCache("usersWithCards");
+        if (cache != null) {
+            cache.evict(userId);
+        }
     }
 }
