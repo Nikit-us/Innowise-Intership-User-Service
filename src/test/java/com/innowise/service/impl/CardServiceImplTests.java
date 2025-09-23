@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cache.CacheManager;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -44,6 +45,9 @@ class CardServiceImplTests {
 
     @Mock
     private CardMapper cardMapper;
+
+    @Mock
+    private CacheManager cacheManager;
 
     @InjectMocks
     private CardServiceImpl cardService;
