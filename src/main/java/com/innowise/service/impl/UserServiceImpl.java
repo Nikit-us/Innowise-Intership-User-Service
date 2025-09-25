@@ -9,12 +9,12 @@ import com.innowise.mapper.UserMapper;
 import com.innowise.model.User;
 import com.innowise.repository.UserRepository;
 import com.innowise.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "usersWithCards", key = "#id")
+    @Transactional(readOnly = true)
     public UserWithCardsDto getUserById(Long id) {
         return userMapper.toUserWithCards(findUserById(id));
     }
