@@ -1,11 +1,10 @@
 package com.innowise.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.innowise.dto.card.CardResponseDto;
 import com.innowise.dto.user.UserResponseDto;
 import com.innowise.dto.user.UserWithCardsDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -19,11 +18,12 @@ import java.time.Duration;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+    private final ObjectMapper objectMapper;
+
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        ObjectMapper objectMapper = createObjectMapper();
-
         Map<String, RedisCacheConfiguration> cacheConfigurations = Map.of(
                 "usersWithCards", createCacheConfig(objectMapper, UserWithCardsDto.class),
                 "cards", createCacheConfig(objectMapper, CardResponseDto.class),
@@ -34,13 +34,6 @@ public class RedisConfig {
                 .withInitialCacheConfigurations(cacheConfigurations)
                 .transactionAware()
                 .build();
-    }
-
-    private ObjectMapper createObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        return objectMapper;
     }
 
     private <T> RedisCacheConfiguration createCacheConfig(ObjectMapper objectMapper, Class<T> type) {
