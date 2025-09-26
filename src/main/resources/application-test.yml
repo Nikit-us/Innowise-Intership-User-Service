@@ -5,3 +5,7 @@ spring:
       ddl-auto: update
   liquibase:
     enabled: false
+
+  data:
+    redis:
+      port: 0
