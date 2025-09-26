@@ -1,10 +1,10 @@
-name: Spring Boot CI Pipeline
+name: User Service CI Pipeline
 
 on:
   push:
     branches:
       - 'feature/**'
-      - 'main'
+      - 'master'
 
 jobs:
   build-test-analyze:
