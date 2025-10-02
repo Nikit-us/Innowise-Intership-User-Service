@@ -6,7 +6,9 @@ import com.innowise.dto.card.CardUpdateDto;
 import com.innowise.service.CardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/cards")
 @RequiredArgsConstructor
+@Slf4j
 public class CardController {
     private final CardService cardService;
 
@@ -41,11 +44,13 @@ public class CardController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@cardServiceImpl.isOwner(#id, authentication.getPrincipal())")
     public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long id, @Valid @RequestBody CardUpdateDto cardUpdateDto) {
         return ResponseEntity.ok(cardService.updateCard(id, cardUpdateDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@cardServiceImpl.isOwner(#id, authentication.getPrincipal())")
     public ResponseEntity<Void> deleteCard(@PathVariable Long id) {
         cardService.deleteCardById(id);
         return ResponseEntity.noContent().build();

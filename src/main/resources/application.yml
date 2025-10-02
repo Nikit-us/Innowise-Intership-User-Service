@@ -28,3 +28,6 @@ spring:
     type: redis
     redis:
       time-to-live: 18000
+auth:
+  service:
+    url: ${AUTH_SERVICE_URL}

@@ -51,6 +51,12 @@ public class CardServiceImpl implements CardService {
         return cardMapper.toCardResponseDto(cards);
     }
 
+    public boolean isOwner(Long cardId, Long userId) {
+        return cardRepository.findOwnerIdById(cardId)
+                .map(owner -> owner.getId().equals(userId))
+                .orElse(false);
+    }
+
     @Override
     @Transactional
     @CachePut(value = "cards", key = "#id")
