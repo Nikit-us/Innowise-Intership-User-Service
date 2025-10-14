@@ -9,3 +9,6 @@ spring:
   data:
     redis:
       port: 0
+auth:
+  service:
+    url: 0
