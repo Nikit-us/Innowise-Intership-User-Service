@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/users/internal/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
