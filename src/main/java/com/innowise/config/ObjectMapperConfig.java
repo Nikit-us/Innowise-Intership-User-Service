@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class JacksonConfig {
+public class ObjectMapperConfig {
     @Bean
     public ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();

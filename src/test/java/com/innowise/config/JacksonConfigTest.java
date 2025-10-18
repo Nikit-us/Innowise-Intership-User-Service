@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = JacksonConfig.class)
+@SpringBootTest(classes = ObjectMapperConfig.class)
 class JacksonConfigTest {
 
     @Autowired
