@@ -1,4 +1,4 @@
-name: Spring Boot CI Pipeline
+name: User-Service CI Pipeline
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - 'fix/**'
       - 'refactor/**'
       - 'master'
+      - 'develop'
 
 permissions:
   contents: read
