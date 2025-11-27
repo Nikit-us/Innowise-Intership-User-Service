@@ -6,60 +6,69 @@ services:
     image: user-service:latest
     container_name: user-service-app
     ports:
-      - "8080:8080"
-    env_file:
-      - .env
+      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
+    environment:
+      - APPLICATION_PORT=${APPLICATION_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CACHE_HOST=${CACHE_HOST}
+      - CACHE_PORT=${CACHE_PORT}
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${APPLICATION_PORT}/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - app-network
     restart: unless-stopped
 
   postgres:
-    image: postgres
+    image: postgres:16-alpine
     container_name: user-service-db
+    ports:
+      - "${DB_PUBLIC_PORT}:5432"
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    ports:
-      - "5432:5432"
     networks:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
 
   redis:
-    image: redis
+    image: redis:7-alpine
     container_name: user-service-cache
-    command: redis-server --appendonly yes
     ports:
-      - "6379:6379"
+      - "${CACHE_PORT}:6379"
     volumes:
       - redis_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - app-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-
 
 volumes:
   postgres_data:
@@ -70,4 +79,5 @@ volumes:
 networks:
   app-network:
     driver: bridge
-    name: user-service-network
+    name: services-network
+    external: true
