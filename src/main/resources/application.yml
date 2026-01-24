@@ -42,8 +42,8 @@ management:
   otlp:
     tracing:
       endpoint: ${OTLP_ENDPOINT}
-loki:
-  endpoint: ${LOKI_ENDPOINT}
+log:
+  home: ${LOG_HOME}
 auth:
   service:
     url: ${AUTH_SERVICE_URL}

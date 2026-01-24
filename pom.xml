@@ -33,8 +33,8 @@
         <mockito.version>5.19.0</mockito.version>
         <lombok-mapstruct-binding>0.2.0</lombok-mapstruct-binding>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <loki.appender.version>1.4.1</loki.appender.version>
         <testcontainers.version>1.21.4</testcontainers.version>
+        <logstash.version>9.0</logstash.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -148,9 +148,10 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.loki4j</groupId>
-            <artifactId>loki-logback-appender</artifactId>
-            <version>${loki.appender.version}</version>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>

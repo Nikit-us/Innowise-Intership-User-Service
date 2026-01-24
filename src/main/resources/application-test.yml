@@ -12,8 +12,8 @@ spring:
 auth:
   service:
     url: 0
-loki:
-  endpoint: http://localhost:3100
+log:
+  home:
 
 management:
   otlp:
