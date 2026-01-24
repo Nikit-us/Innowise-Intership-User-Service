@@ -12,3 +12,10 @@ spring:
 auth:
   service:
     url: 0
+log:
+  home:
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://localhost:4317
