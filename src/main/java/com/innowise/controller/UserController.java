@@ -52,13 +52,11 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    @PreAuthorize("authentication.getPrincipal().equals(#id)")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
         return ResponseEntity.ok(userService.updateUser(id, userUpdateDto));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_SERVICE') or authentication.getPrincipal().equals(#id)")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
