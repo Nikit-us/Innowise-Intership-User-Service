@@ -30,7 +30,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    @PreAuthorize("authentication.getPrincipal().equals(#id)")
     public ResponseEntity<UserWithCardsDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
