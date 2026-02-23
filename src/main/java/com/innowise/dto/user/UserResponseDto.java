@@ -1,9 +1,10 @@
 package com.innowise.dto.user;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record UserResponseDto(
-        Long id,
+        UUID id,
         String name,
         String surname,
         LocalDate birthDate,

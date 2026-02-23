@@ -3,7 +3,6 @@ server:
 spring:
   application:
     name: Innowise-Intership-User-Service
-
   security:
     oauth2:
       resourceserver:
@@ -59,4 +58,7 @@ auth:
     url: ${AUTH_SERVICE_URL}
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+services:
+  order:
+    clientId: ${ORDER_CLIENT_ID}

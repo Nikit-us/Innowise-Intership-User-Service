@@ -17,6 +17,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -28,8 +29,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;

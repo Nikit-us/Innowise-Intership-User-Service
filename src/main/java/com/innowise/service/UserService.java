@@ -6,15 +6,16 @@ import com.innowise.dto.user.UserUpdateDto;
 import com.innowise.dto.user.UserWithCardsDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
-    UserResponseDto createUser(UserCreateDto userCreateDto);
+    void createUser(UUID id, UserCreateDto userCreateDto);
 
-    UserWithCardsDto getUserById(Long id);
+    UserWithCardsDto getUserById(UUID id);
     UserResponseDto getUserByEmail(String email);
-    List<UserResponseDto> getUsersByIds(List<Long> ids);
+    List<UserResponseDto> getUsersByIds(List<UUID> ids);
 
-    UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto);
+    void updateUser(UUID id, UserUpdateDto userUpdateDto);
 
-    void deleteUser(Long id);
+    void deleteUser(UUID id);
 }

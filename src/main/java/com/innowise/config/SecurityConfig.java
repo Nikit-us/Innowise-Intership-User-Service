@@ -1,25 +1,32 @@
 package com.innowise.config;
 
 import com.innowise.exception.CustomSecurityHandlers;
-import com.innowise.filter.JwtAuthenticationFilter;
+import com.innowise.util.KeycloakRoleConverter;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${services.order.clientId}")
+    private String clientId;
     private final CustomSecurityHandlers customSecurityHandlers;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter(clientId));
         http
                 .csrf(AbstractHttpConfigurer::disable) // NOSONAR java:S4502 - Stateless JWT auth, CSRF not needed
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -33,7 +40,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
-                        oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                        oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
                 );
         return http.build();
     }

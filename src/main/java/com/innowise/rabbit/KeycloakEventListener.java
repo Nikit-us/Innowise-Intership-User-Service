@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.dto.user.UserCreateDto;
+import com.innowise.dto.user.UserUpdateDto;
 import com.innowise.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,18 @@ public class KeycloakEventListener {
 
     @RabbitListener(queues = "user_service_keycloak_queue")
     public void handleKeycloakEvent(KeycloakEventMessage message) {
-        log.info("Action: {}", message.action());
-        if ("USER_CREATE".equals(message.action())) {
-            UserCreateDto createDto = objectMapper.convertValue(message.payload(), UserCreateDto.class);
-
-            log.info("User create: {}", createDto.email());
-            userService.createUser(createDto);
+        switch (message.action()) {
+            case "USER_CREATE" -> {
+                UserCreateDto createDto = objectMapper.convertValue(message.payload(), UserCreateDto.class);
+                userService.createUser(message.userId(), createDto);
+            }
+            case "USER_UPDATE" -> {
+                UserUpdateDto updateDto = objectMapper.convertValue(message.payload(), UserUpdateDto.class);
+                userService.updateUser(message.userId(), updateDto);
+            }
+            case "USER_DELETE" -> {
+                userService.deleteUser(message.userId());
+            }
         }
     }
 }

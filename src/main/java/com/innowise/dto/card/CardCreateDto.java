@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-
+import java.util.UUID;
 
 public record CardCreateDto(
         @NotNull(message = "Card number is required")
@@ -15,7 +15,7 @@ public record CardCreateDto(
         String number,
 
         @NotNull(message = "User ID is required")
-        Long userId,
+        UUID userId,
 
         @NotBlank(message = "Card holder name cannot be blank")
         @Size(max = 100, message = "Card holder name must not exceed 100 characters")
