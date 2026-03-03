@@ -4,9 +4,10 @@ import com.innowise.dto.card.CardResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public record UserWithCardsDto(
-        Long id,
+        UUID id,
         String name,
         String surname,
         LocalDate birthDate,

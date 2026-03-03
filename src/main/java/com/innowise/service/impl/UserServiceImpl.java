@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +29,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponseDto createUser(UserCreateDto userCreateDto) {
-        return userMapper.toUserResponseDto(
-                userRepository.save(userMapper.toUser(userCreateDto))
-        );
+    public void createUser(UUID id, UserCreateDto userCreateDto) {
+        User entity = userMapper.toUser(userCreateDto);
+        entity.setId(id);
+        userRepository.save(entity);
     }
 
     @Override
     @Cacheable(value = "usersWithCards", key = "#id")
     @Transactional(readOnly = true)
-    public UserWithCardsDto getUserById(Long id) {
+    public UserWithCardsDto getUserById(UUID id) {
         return userMapper.toUserWithCards(findUserById(id));
     }
 
@@ -50,45 +51,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> getUsersByIds(List<Long> ids) {
+    public List<UserResponseDto> getUsersByIds(List<UUID> ids) {
         List<User> users = userRepository.findAllById(ids);
         return userMapper.toUserResponseDto(users);
     }
 
     @Override
     @Transactional
-    public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
+    public void updateUser(UUID id, UserUpdateDto userUpdateDto) {
         User user = findUserById(id);
         String oldEmail = user.getEmail();
-
-        if (userUpdateDto.name() != null) {
-            user.setName(userUpdateDto.name());
-        }
-        if (userUpdateDto.surname() != null) {
-            user.setSurname(userUpdateDto.surname());
-        }
-        if (userUpdateDto.birthDate() != null) {
-            user.setBirthDate(userUpdateDto.birthDate());
-        }
-        if (userUpdateDto.email() != null) {
-            user.setEmail(userUpdateDto.email());
-        }
+        userMapper.merge(userUpdateDto, user);
 
         User updatedUser = userRepository.save(user);
 
         updateUsersCache(updatedUser, oldEmail);
-
-        return userMapper.toUserResponseDto(userRepository.save(user));
     }
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(UUID id) {
         deleteUserCache(id, findUserById(id).getEmail());
         userRepository.deleteById(id);
     }
 
-    private User findUserById(Long id) {
+    private User findUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User by id: " + id + " not found"));
     }
@@ -110,7 +97,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void deleteUserCache(Long id, String userEmail) {
+    private void deleteUserCache(UUID id, String userEmail) {
         Cache cache = cacheManager.getCache("usersWithCards");
         if(cache != null) {
             cache.evict(id);

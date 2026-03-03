@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +52,7 @@ public class CardServiceImpl implements CardService {
         return cardMapper.toCardResponseDto(cards);
     }
 
-    public boolean isOwner(Long cardId, Long userId) {
+    public boolean isOwner(Long cardId, UUID userId) {
         return cardRepository.findOwnerIdById(cardId)
                 .map(owner -> owner.getId().equals(userId))
                 .orElse(false);
@@ -85,7 +86,7 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card by id " + id + " not found"));
     }
 
-    private void updateUserWithCardsCache(Long userId) {
+    private void updateUserWithCardsCache(UUID userId) {
         Cache cache = cacheManager.getCache("usersWithCards");
         if (cache != null) {
             cache.evict(userId);
