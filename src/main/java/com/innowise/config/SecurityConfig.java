@@ -2,9 +2,7 @@ package com.innowise.config;
 
 import com.innowise.exception.CustomSecurityHandlers;
 import com.innowise.util.KeycloakRoleConverter;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +19,19 @@ public class SecurityConfig {
 
     @Value("${services.order.clientId}")
     private String clientId;
+
     private final CustomSecurityHandlers customSecurityHandlers;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter(clientId));
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter(clientId));
+        return converter;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) // NOSONAR java:S4502 - Stateless JWT auth, CSRF not needed
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -34,7 +39,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(customSecurityHandlers)
                         .accessDeniedHandler(customSecurityHandlers)
                 )
-                .authorizeHttpRequests( auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .anyRequest().authenticated()
